@@ -8,7 +8,6 @@ This is a Planning Poker project developed using Laravel as the backend framewor
 ## Usage
 
 ![First time](/resources/images/first-time.png)
-![New Round](/resources/images/new-round.png)
 ![Playing](/resources/images/playing.png)
 
 ## Technologies Used
