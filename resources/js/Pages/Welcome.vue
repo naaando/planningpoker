@@ -11,15 +11,15 @@ function createRound() {
 </script>
 
 <template>
-  <Head title="Welcome" />
+  <Head title="New Round" />
 
   <MainLayout>
     <div class="absolute top-0 flex items-center justify-center w-full h-full">
       <button
-        class="px-3 py-2 text-black bg-white"
+        class="px-4 py-2 my-1 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
         v-on:click="createRound()"
       >
-        Nova rodada!
+        New Round!
       </button>
     </div>
   </MainLayout>
