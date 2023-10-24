@@ -1,0 +1,21 @@
+Existem Usuários
+Existe Voto numéricos
+Existe Rodadas com Usuários votando
+
+MER
+
+USUARIO
+----------------------------------------------------------------
+ID
+ALIAS
+
+RODADA
+----------------------------------------------------------------
+ID
+ENCERRADO_EM
+
+VOTO
+----------------------------------------------------------------
+USUARIO_ID
+RODADA_ID
+NUMERO

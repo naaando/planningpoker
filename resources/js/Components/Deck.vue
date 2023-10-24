@@ -1,0 +1,48 @@
+<script setup>
+import { votes } from "@/api";
+import { onMounted, watch, ref } from "vue";
+
+const props = defineProps({
+  username: {
+    type: String,
+    required: true,
+  },
+  round: {
+    type: String,
+    required: true,
+  },
+});
+
+const vote = votes(props.round, props.username);
+const items = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89];
+const selectedItem = ref(null);
+
+onMounted(() => {
+  vote.join().then((response) => {
+    selectedItem.value = response.vote;
+  });
+});
+
+watch([props, selectedItem], (value) => {
+  vote.set(selectedItem.value);
+});
+</script>
+
+<template>
+  <div
+    class="fixed bottom-0 flex items-center justify-center w-full space-x-3 text-center"
+  >
+    <button
+      :key="item"
+      v-for="item in items"
+      class="px-3 py-6 text-lg font-bold rounded-t w-14"
+      v-on:click="selectedItem = item"
+      :class="{
+        'bg-blue-500 text-white': selectedItem === item,
+        'bg-white text-black': selectedItem !== item,
+      }"
+    >
+      {{ item }}
+    </button>
+  </div>
+</template>
