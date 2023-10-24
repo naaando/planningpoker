@@ -3,7 +3,7 @@
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?logo=tailwind-css&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?logo=vuedotjs&logoColor=%234FC08D)
 
-# Planning Poker Project with Laravel, Vue, Inertia.js, and Ably
+# Planning Poker
 
 ## Overview
 
