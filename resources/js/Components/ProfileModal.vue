@@ -26,7 +26,7 @@ const setUsername = () => {
     :show="!props.username.trim()"
   >
     <div class="items-stretch p-3 justify-stretch">
-      <div class="my-1">Bem vindo! Para começar, digite seu nome.</div>
+      <div class="my-1">Welcome! To start, type your name.</div>
 
       <input
         type="text"
@@ -40,7 +40,7 @@ const setUsername = () => {
         class="block w-full px-4 py-2 my-1 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
         v-on:click="setUsername()"
       >
-        Confirmar
+        Confirm
       </button>
     </div>
   </Modal>

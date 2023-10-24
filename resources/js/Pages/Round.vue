@@ -41,7 +41,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Head title="Welcome" />
+  <Head title="Round" />
 
   <MainLayout v-slot="{ username }">
     <BaseTable
