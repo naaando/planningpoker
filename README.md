@@ -18,10 +18,10 @@ This is a Planning Poker project developed using Laravel as the backend framewor
 
 ## Technologies Used
 
-- Laravel
-- Vue.js
-- Inertia.js
-- Ably
+- [Laravel](https://laravel.com/)
+- [Vue.js](https://vuejs.org/)
+- [Inertia.js](https://inertiajs.com/)
+- [Ably](ably.com/)
 
 ## Requirements
 
