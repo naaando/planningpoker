@@ -4,14 +4,21 @@ FROM php:8.1-apache
 # Copy php.ini file
 COPY deploy/php.ini /usr/local/etc/php/
 
+# Copy start script
+COPY deploy/start /usr/local/bin/start
+
+RUN chmod +x /usr/local/bin/start
+
 # Set the working directory to /app
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-# Fix storage permissions
+# Fix file permissions
+RUN mkdir -p /app/storage /app/bootstrap/cache
 RUN chown -R www-data:www-data /app
+RUN chmod -R ug+rwx /app/storage /app/bootstrap
 
 ENV APACHE_DOCUMENT_ROOT /app/public
 
@@ -43,11 +50,8 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --no-interaction --no-scripts --no-progress --optimize-autoloader --no-dev
 
 # Compile assets
-RUN npm ci && npm build
-
-# Cache config
-RUN php artisan config:cache
+RUN npm ci
 
 # Expose port 80 and start Apache server
 EXPOSE 80
-CMD ["apache2-foreground"]
+ENTRYPOINT [ "/usr/local/bin/start" ]
