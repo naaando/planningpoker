@@ -1,0 +1,32 @@
+# Ignore vendor directory
+/vendor
+
+# Ignore node_modules directory
+/node_modules
+
+# Ignore .env file
+.env
+
+# Ignore .git directory
+.git
+
+# Ignore .idea directory
+.idea
+
+# Ignore storage/logs directory
+/storage/logs
+
+# Ignore bootstrap/cache directory
+/bootstrap/cache
+
+# Ignore Homestead.yaml and Homestead.json files
+Homestead.yaml
+Homestead.json
+
+# Ignore composer.lock file
+composer.lock
+
+# Ignore .DS_Store files
+.DS_Store
+
+deploy/
