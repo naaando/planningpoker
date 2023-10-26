@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+npm run build
+
+php artisan optimize
+
+exec apache2-foreground
