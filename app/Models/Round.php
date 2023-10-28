@@ -15,14 +15,14 @@ class Round extends Model
 
     protected $appends = ['votes_average', 'votes_count'];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function votes()
     {
         return $this->hasMany(Vote::class);
+    }
+
+    public function room()
+    {
+        return $this->hasOne(Room::class);
     }
 
     public function getVotesAverageAttribute()
