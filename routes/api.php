@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoundController;
 use App\Http\Controllers\RoundVoteController;
 use Illuminate\Support\Facades\Route;
@@ -16,5 +17,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('rounds', RoundController::class);
-Route::put('rounds/{round}/finish', [RoundController::class, 'finish'])->name('rounds.finish');
 Route::apiResource('rounds.votes', RoundVoteController::class);
+Route::apiResource('rooms', RoomController::class)->only(['store', 'show', 'update']);

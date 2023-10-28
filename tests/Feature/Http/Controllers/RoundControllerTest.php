@@ -1,9 +1,11 @@
 <?php
 
+use App\Events\RoundCreated;
 use App\Events\RoundUpdated;
+use App\Models\Room;
 use App\Models\Round;
 use App\Models\Vote;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -12,12 +14,16 @@ use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
 
-uses(LazilyRefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('can create round', function () {
     assertDatabaseCount('rounds', 0);
+    Event::fake();
+    $room = Room::factory()->create();
 
-    postJson('/api/rounds')
+    postJson('/api/rounds', [
+        'room_id' => $room->id,
+    ])
         ->assertCreated()
         ->assertJson(function (AssertableJson $json) {
             $json
@@ -26,11 +32,12 @@ test('can create round', function () {
             ;
         });
 
+    Event::assertDispatched(RoundCreated::class);
     assertDatabaseCount('rounds', 1);
 });
 
 test('can get round with votes', function () {
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
 
     getJson("/api/rounds/{$round->id}")
         ->assertJson(function (AssertableJson $json) use ($round) {
@@ -44,26 +51,8 @@ test('can get round with votes', function () {
         });
 });
 
-test('can finish round', function () {
-    Event::fake();
-    $round = Round::factory()->create();
-
-    putJson("/api/rounds/{$round->id}/finish")
-        ->assertOk()
-        ->assertJson(function (AssertableJson $json) use ($round) {
-            $json
-                ->where('data.id', $round->id)
-                ->has('data.created_at')
-                ->has('data.updated_at')
-                ->has('data.finished_at')
-            ;
-        });
-
-    Event::assertDispatched(RoundUpdated::class);
-});
-
 test('average is zero on empty votes', function () {
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
 
     getJson("/api/rounds/{$round->id}")
         ->assertJson(function (AssertableJson $json) {
@@ -75,7 +64,7 @@ test('average is zero on empty votes', function () {
 });
 
 test('average is zero on nulled votes', function () {
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
     Vote::factory()->for($round)->create(['vote' => null]);
 
     getJson("/api/rounds/{$round->id}")
@@ -88,7 +77,7 @@ test('average is zero on nulled votes', function () {
 });
 
 test('average is correctly calculated', function () {
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
     Vote::factory()->for($round)->createMany([
         ['vote' => null],
         ['vote' => 1],
@@ -113,7 +102,7 @@ test('average is correctly calculated', function () {
 });
 
 test('count votes works', function () {
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
     Vote::factory()->for($round)->createMany([
         ['vote' => null],
         ['vote' => 1],
@@ -139,7 +128,7 @@ test('count votes works', function () {
 
 // a bit redundant but validates logic
 test('count vote ignores null voters', function () {
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
     Vote::factory()->for($round)->createMany([
         ['vote' => null],
         ['vote' => null],
@@ -154,4 +143,64 @@ test('count vote ignores null voters', function () {
                 ->where('data.votes_count', 1)
             ;
         });
+});
+
+test('can finish round', function () {
+    Event::fake();
+    $round = Round::factory()->for(Room::factory())->create();
+
+    putJson("/api/rounds/{$round->id}", [
+        'finished' => true,
+    ])
+        ->assertOk()
+        ->assertJson(function (AssertableJson $json) use ($round) {
+            $json
+                ->where('data.id', $round->id)
+                ->has('data.created_at')
+                ->has('data.updated_at')
+                ->has('data.finished_at')
+                ->whereNot('data.finished_at', null)
+            ;
+        });
+
+    Event::assertDispatched(RoundUpdated::class);
+});
+
+test('finish can be false', function () {
+    Event::fake();
+    $round = Round::factory()->for(Room::factory())->create();
+
+    putJson("/api/rounds/{$round->id}", [
+        'finished' => false,
+    ])
+        ->assertOk()
+        ->assertJson(function (AssertableJson $json) use ($round) {
+            $json
+                ->where('data.id', $round->id)
+                ->has('data.created_at')
+                ->has('data.updated_at')
+                ->has('data.finished_at')
+                ->where('data.finished_at', null)
+            ;
+        });
+
+    Event::assertDispatched(RoundUpdated::class);
+});
+
+test('cannot create round on room with active round', function () {
+    $room = Room::factory()->create();
+    $round = Round::factory()->for($room)->create();
+
+    postJson('/api/rounds', [
+        'room_id' => $room->id,
+    ])->assertStatus(422);
+
+    $round->unguard();
+    $round->update([
+        'finished_at' => now(),
+    ]);
+
+    postJson('/api/rounds', [
+        'room_id' => $room->id,
+    ])->assertCreated();
 });

@@ -11,18 +11,20 @@ class Round extends Model
     use HasFactory;
     use HasUlids;
 
+    protected $fillable = ['room_id'];
+
     protected $with = ['votes'];
 
     protected $appends = ['votes_average', 'votes_count'];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function votes()
     {
         return $this->hasMany(Vote::class);
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
     }
 
     public function getVotesAverageAttribute()

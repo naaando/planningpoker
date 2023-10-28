@@ -13,18 +13,30 @@ const props = defineProps({
   },
 });
 
-const vote = votes(props.round, props.username);
+const vote = ref(null);
 const items = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89];
 const selectedItem = ref(null);
 
 onMounted(() => {
-  vote.join().then((response) => {
+  vote.value = votes(props.round, props.username);
+  vote.value.join().then((response) => {
     selectedItem.value = response.vote;
   });
 });
 
-watch([props, selectedItem], (value) => {
-  vote.set(selectedItem.value);
+watch(
+  () => props.round,
+  () => {
+    selectedItem.value = null;
+    vote.value = votes(props.round, props.username);
+    vote.value.join().then((response) => {
+      selectedItem.value = response.vote;
+    });
+  }
+);
+
+watch([() => props.name, selectedItem], () => {
+  vote.value.set(selectedItem.value);
 });
 </script>
 

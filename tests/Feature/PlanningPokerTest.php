@@ -10,8 +10,10 @@ use function Pest\Laravel\putJson;
 uses(LazilyRefreshDatabase::class);
 
 test('can start a round and play planning poker', function () {
+    $room = createRoom();
+
     // we get the round id to use on url
-    $round = createRound();
+    $round = createRound($room);
 
     // The voter is represented by posting the vote, either numbered or null
     $voter1 = joinRound($round, fake()->name);
@@ -36,9 +38,18 @@ test('can start a round and play planning poker', function () {
     });
 });
 
-function createRound(): array
+function createRoom(): array
 {
-    return postJson('api/rounds')->json('data');
+    return postJson('api/rooms', [
+        'name' => fake()->name,
+    ])->json('data');
+}
+
+function createRound($room): array
+{
+    return postJson('api/rounds', [
+        'room_id' => $room['id'],
+    ])->json('data');
 }
 
 function joinRound($round, $name): array
@@ -57,5 +68,7 @@ function voteOnRound($round, $voter, $vote): array
 
 function finishRound($round): TestResponse
 {
-    return putJson("api/rounds/{$round['id']}/finish");
+    return putJson("api/rounds/{$round['id']}", [
+        'finished' => true,
+    ]);
 }
