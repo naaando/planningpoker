@@ -1,12 +1,10 @@
 <?php
 
 use App\Models\Room;
-use App\Models\Round;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
-use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\deleteJson;
 use function Pest\Laravel\getJson;
@@ -17,10 +15,6 @@ uses(RefreshDatabase::class);
 
 test('index not allowed', function () {
     getJson('/api/rooms')->assertMethodNotAllowed();
-});
-
-test('update not allowed', function () {
-    putJson('/api/rooms/1')->assertMethodNotAllowed();
 });
 
 test('delete not allowed', function () {
@@ -36,34 +30,24 @@ test('can create a room', function () {
 
     $response->assertCreated();
 
-    /** @var Round */
-    $round = Round::sole();
-
     $response->assertJson([
         'name' => $name,
         'slug' => Str::slug($name),
-        'round' => $round->makeHidden('finished_at')->jsonSerialize(),
     ]);
 
     assertDatabaseHas('rooms', [
         'name' => $name,
         'slug' => Str::slug($name),
-        'round_id' => $round->id,
     ]);
-
-    assertDatabaseCount('rounds', 1);
 });
 
 test('can fetch current round on controller', function () {
     $room = Room::factory()->create();
-    $round = Round::factory()->create();
-    $room->round()->associate($round);
-    $room->save();
+    $round = $room->rounds()->create();
 
     getJson("/api/rooms/{$room->slug}")->assertOk()->assertJson([
         'name' => $room->name,
         'slug' => $room->slug,
-        'round_id' => $round->id,
         'round' => [
             'id' => $round->id,
             'created_at' => $round->created_at->toISOString(),
@@ -71,5 +55,23 @@ test('can fetch current round on controller', function () {
             'finished_at' => null,
             'votes' => [],
         ],
+    ]);
+});
+
+test('can update name and slug', function () {
+    $room = Room::factory()->create();
+
+    $name = fake()->name;
+
+    putJson("/api/rooms/{$room->slug}", [
+        'name' => $name,
+    ])->assertOk()->assertJson([
+        'name' => $name,
+        'slug' => Str::slug($name),
+    ]);
+
+    assertDatabaseHas('rooms', [
+        'name' => $name,
+        'slug' => Str::slug($name),
     ]);
 });

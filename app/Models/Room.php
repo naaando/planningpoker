@@ -10,10 +10,6 @@ class Room extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'slug';
-    public $incrementing = false;
-    protected $keyType = 'string';
-
     protected $fillable = ['name', 'round_id'];
 
     protected $with = ['round'];
@@ -38,5 +34,15 @@ class Room extends Model
     public function round()
     {
         return $this->hasOne(Round::class)->whereNull('finished_at');
+    }
+
+    /**
+     * Get the route key name for Laravel's implicit binding.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }
