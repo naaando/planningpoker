@@ -31,12 +31,22 @@ class RoundController extends Controller
     }
 
     /**
-     * Finish the round
+     * Update the specified resource.
      */
-    public function finish(Round $round)
+    public function update(Request $request, Round $round)
     {
-        $round->finished_at = now();
+        $request->validate([
+            'finished' => ['required', 'boolean'],
+        ]);
+
+        if ($request->finished) {
+            $round->finished_at = now();
+        } else {
+            $round->finished_at = null;
+        }
+
         $round->save();
+
         Event::dispatch(new RoundUpdated($round));
 
         return new RoundResource($round);

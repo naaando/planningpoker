@@ -44,24 +44,6 @@ test('can get round with votes', function () {
         });
 });
 
-test('can finish round', function () {
-    Event::fake();
-    $round = Round::factory()->create();
-
-    putJson("/api/rounds/{$round->id}/finish")
-        ->assertOk()
-        ->assertJson(function (AssertableJson $json) use ($round) {
-            $json
-                ->where('data.id', $round->id)
-                ->has('data.created_at')
-                ->has('data.updated_at')
-                ->has('data.finished_at')
-            ;
-        });
-
-    Event::assertDispatched(RoundUpdated::class);
-});
-
 test('average is zero on empty votes', function () {
     $round = Round::factory()->create();
 
@@ -154,4 +136,25 @@ test('count vote ignores null voters', function () {
                 ->where('data.votes_count', 1)
             ;
         });
+});
+
+test('can finish round', function () {
+    Event::fake();
+    $round = Round::factory()->create();
+
+    putJson("/api/rounds/{$round->id}", [
+        'finished' => true,
+    ])
+        ->assertOk()
+        ->assertJson(function (AssertableJson $json) use ($round) {
+            $json
+                ->where('data.id', $round->id)
+                ->has('data.created_at')
+                ->has('data.updated_at')
+                ->has('data.finished_at')
+                ->whereNot('data.finished_at', null)
+            ;
+        });
+
+    Event::assertDispatched(RoundUpdated::class);
 });
