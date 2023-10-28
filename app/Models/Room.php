@@ -25,10 +25,18 @@ class Room extends Model
     }
 
     /**
-     * Get the round that owns the room.
+     * Get the rounds
+     */
+    public function rounds()
+    {
+        return $this->hasMany(Round::class);
+    }
+
+    /**
+     * Get the current round
      */
     public function round()
     {
-        return $this->belongsTo(Round::class);
+        return $this->hasOne(Round::class)->whereNull('finished_at');
     }
 }
