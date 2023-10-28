@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\RoundCreated;
 use App\Events\RoundUpdated;
 use App\Models\Room;
 use App\Models\Round;
@@ -17,7 +18,7 @@ uses(RefreshDatabase::class);
 
 test('can create round', function () {
     assertDatabaseCount('rounds', 0);
-
+    Event::fake();
     $room = Room::factory()->create();
 
     postJson('/api/rounds', [
@@ -31,6 +32,7 @@ test('can create round', function () {
             ;
         });
 
+    Event::assertDispatched(RoundCreated::class);
     assertDatabaseCount('rounds', 1);
 });
 
