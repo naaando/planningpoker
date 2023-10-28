@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RoundCreated;
 use App\Events\RoundUpdated;
 use App\Http\Resources\RoundResource;
 use App\Models\Room;
@@ -25,6 +26,8 @@ class RoundController extends Controller
         abort_if($room->round, 422, 'Room already has a active round');
 
         $round = $room->rounds()->create($request->all());
+
+        Event::dispatch(new RoundCreated($round));
 
         return new RoundResource($round);
     }
