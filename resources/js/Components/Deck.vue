@@ -44,10 +44,6 @@ watch([() => props.name, selectedItem], () => {
   <div
     class="fixed bottom-0 flex items-center justify-center w-full space-x-3 text-center"
   >
-    <div>
-      {{ round }}
-    </div>
-
     <button
       :key="item"
       v-for="item in items"
