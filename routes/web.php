@@ -27,6 +27,7 @@ Route::get('/', function () {
 
 Route::get('/{room:slug}', function (Room $room) {
     return Inertia::render('Room', [
+        'roomId' => $room->id,
         'roomSlug' => $room->slug,
         'roomName' => $room->name,
     ]);

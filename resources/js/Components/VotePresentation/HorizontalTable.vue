@@ -2,7 +2,7 @@
 import Card from "../Card.vue";
 
 const props = defineProps({
-  visible: {
+  finished: {
     type: Boolean,
     required: true,
   },
@@ -12,6 +12,14 @@ const props = defineProps({
   },
   reveal: {
     type: Function,
+    required: true,
+  },
+  newRound: {
+    type: Function,
+    required: true,
+  },
+  hasActiveRound: {
+    type: Boolean,
     required: true,
   },
 });
@@ -34,7 +42,7 @@ const props = defineProps({
                 <Card
                   :number="vote.vote"
                   :owner="vote.name"
-                  :visible="visible"
+                  :visible="finished"
                 ></Card>
               </div>
             </div>
@@ -54,7 +62,7 @@ const props = defineProps({
                 <Card
                   :number="vote.vote"
                   :owner="vote.name"
-                  :visible="visible"
+                  :visible="finished"
                 ></Card>
               </div>
             </div>
@@ -67,12 +75,27 @@ const props = defineProps({
               <div
                 class="rounded-full w-full aspect-video bg-white drop-shadow-sm flex justify-center items-center"
               >
-                <div class="text-center">
+                <div
+                  class="text-center"
+                  v-if="!finished"
+                >
                   <button
                     class="px-6 py-4 bg-red-500 text-white rounded-full text-xl"
                     @click="reveal()"
                   >
                     Reveal
+                  </button>
+                </div>
+
+                <div
+                  class="text-center"
+                  v-if="finished"
+                >
+                  <button
+                    class="px-6 py-4 bg-blue-500 text-white rounded-full text-xl"
+                    @click="newRound()"
+                  >
+                    New Round
                   </button>
                 </div>
               </div>
@@ -91,7 +114,7 @@ const props = defineProps({
                 <Card
                   :number="vote.vote"
                   :owner="vote.name"
-                  :visible="visible"
+                  :visible="finished"
                 ></Card>
               </div>
             </div>
@@ -110,7 +133,7 @@ const props = defineProps({
                 <Card
                   :number="vote.vote"
                   :owner="vote.name"
-                  :visible="visible"
+                  :visible="finished"
                 ></Card>
               </div>
             </div>

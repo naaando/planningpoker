@@ -23,10 +23,13 @@ class RoundController extends Controller
 
         $room = Room::find($request->input('room_id'));
 
-        abort_if($room->round, 422, 'Room already has a active round');
+        abort_unless(
+            $room->round === null || $room->round->finished_at,
+            422,
+            'Room already has a active round'
+        );
 
-        $round = $room->rounds()->create($request->all());
-
+        $round = Round::create($request->all());
         Event::dispatch(new RoundCreated($round));
 
         return new RoundResource($round);

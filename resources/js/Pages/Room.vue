@@ -5,9 +5,13 @@ import HorizontalTable from "@/Components/VotePresentation/HorizontalTable.vue";
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { onMounted, ref } from "vue";
-import { rooms, rounds } from "../api";
+import { createRound, rooms, rounds } from "../api";
 
 const props = defineProps({
+  roomId: {
+    type: String,
+    required: true,
+  },
   roomSlug: {
     type: String,
     required: true,
@@ -23,10 +27,15 @@ const roundId = ref(null);
 const votes = ref([]);
 const count = ref(0);
 const average = ref(0);
-const visible = ref(false);
+const finished = ref(false);
 
 const reveal = () => {
-  rounds(roundId.value).finish(!visible.value);
+  rounds(roundId.value).finish(!finished.value);
+};
+
+const newRound = () => {
+  console.log(props.roomId);
+  createRound(props.roomId);
 };
 
 onMounted(async () => {
@@ -38,23 +47,28 @@ onMounted(async () => {
     votes.value = room.data.data.round.votes;
     count.value = room.data.data.round.votes_count;
     average.value = room.data.data.round.votes_average;
-    visible.value = room.data.data.round.finished_at !== null;
+    finished.value = room.data.data.round.finished_at !== null;
   }
 
   Echo.channel(`rooms.${props.roomSlug}`)
     .listen("RoundCreated", (e) => {
       loaded.value = true;
       roundId.value = e.round.id;
+
       votes.value = e.round.votes;
       count.value = e.round.votes_count;
       average.value = e.round.votes_average;
-      visible.value = e.round.finished_at !== null;
+      finished.value = e.round.finished_at !== null;
     })
     .listen("RoundUpdated", (e) => {
+      if (e.round.id !== roundId.value) {
+        return;
+      }
+
       votes.value = e.round.votes;
       count.value = e.round.votes_count;
       average.value = e.round.votes_average;
-      visible.value = e.round.finished_at !== null;
+      finished.value = e.round.finished_at !== null;
     });
 });
 </script>
@@ -64,18 +78,19 @@ onMounted(async () => {
 
   <MainLayout v-slot="{ username }">
     <BaseTable
-      v-if="loaded"
       v-slot="{ directionalVotes }"
       :votes="votes"
       :count="count"
       :average="average"
-      :visible="visible"
+      :finished="finished"
     >
       <div class="hidden sm:block">
         <HorizontalTable
-          :visible="visible"
+          :hasActiveRound="roundId !== null"
+          :finished="finished"
           :directionalVotes="directionalVotes"
           :reveal="reveal"
+          :newRound="newRound"
         ></HorizontalTable>
       </div>
 
@@ -85,7 +100,7 @@ onMounted(async () => {
 
       <!-- <div class="hidden sm:block">
         <VerticalTable
-          :visible="visible"
+          :finished="finished"
           :directionalVotes="directionalVotes"
           :reveal="reveal"
         ></VerticalTable>

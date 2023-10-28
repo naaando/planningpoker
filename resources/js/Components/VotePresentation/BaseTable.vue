@@ -13,7 +13,7 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  visible: {
+  finished: {
     type: Boolean,
     required: true,
   },
@@ -48,7 +48,7 @@ const directionalVotes = computed(() => {
 
 <template>
   <div
-    v-if="!visible"
+    v-if="!finished"
     class="p-2 mb-4 space-x-4 text-gray-950 bg-yellow-500 justify-around font-bold text-center"
   >
     Left to vote {{ props.votes.length - props.count }}
