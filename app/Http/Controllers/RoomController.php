@@ -14,7 +14,7 @@ class RoomController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => ['required', 'string'],
+            'name' => ['required', 'string', 'unique:rooms'],
         ]);
 
         $room = Room::create([
