@@ -3,7 +3,7 @@
 use App\Events\RoundUpdated;
 use App\Models\Round;
 use App\Models\Vote;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -12,7 +12,7 @@ use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
 
-uses(LazilyRefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('can create round', function () {
     assertDatabaseCount('rounds', 0);

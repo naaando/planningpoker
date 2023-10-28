@@ -4,7 +4,7 @@ use App\Events\RoundUpdated;
 use App\Models\Round;
 use App\Models\Vote;
 
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 
 use function Pest\Laravel\assertDatabaseCount;
@@ -13,7 +13,7 @@ use function Pest\Laravel\putJson;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNull;
 
-uses(LazilyRefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('can join round with null vote', function () {
     Event::fake();
