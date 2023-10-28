@@ -13,13 +13,11 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  visible: {
+    type: Boolean,
+    required: true,
+  },
 });
-
-const visible = ref(false);
-
-const reveal = () => {
-  visible.value = !visible.value;
-};
 
 const directionalVotes = computed(() => {
   const crossAxis = [2, 3];
@@ -60,7 +58,5 @@ const directionalVotes = computed(() => {
     :directionalVotes="directionalVotes"
     :count="props.count"
     :average="props.average"
-    :visible="visible"
-    :reveal="reveal"
   ></slot>
 </template>

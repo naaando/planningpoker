@@ -1,26 +1,54 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
+import { createRound, createRoom } from "@/api";
 import { Head, router } from "@inertiajs/vue3";
-import axios from "axios";
+import { ref } from "vue";
 
-function createRound() {
-  axios.post("/api/rounds").then((response) => {
-    router.get(`/${response.data.data.id}`);
-  });
+const roomName = ref("");
+const error = ref("");
+
+async function start() {
+  try {
+    const room = await createRoom(roomName.value);
+    await createRound(room.data.data.id);
+    router.get(`/${room.data.data.slug}`);
+  } catch (e) {
+    error.value = e.response.data.message;
+  }
 }
 </script>
 
 <template>
-  <Head title="New Round" />
+  <Head title="New Room" />
 
   <MainLayout>
     <div class="absolute top-0 flex items-center justify-center w-full h-full">
-      <button
-        class="px-4 py-2 my-1 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
-        v-on:click="createRound()"
+      <form
+        class="bg-white rounded p-3"
+        @submit.prevent="start()"
       >
-        New Round!
-      </button>
+        <input
+          type="text"
+          v-model="roomName"
+          class="w-full my-1 rounded"
+          autofocus
+          required
+          @blur="error = ''"
+        />
+
+        <p
+          class="text-red-500"
+          v-if="error"
+        >
+          {{ error }}
+        </p>
+
+        <button
+          class="block w-full px-4 py-2 my-1 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+        >
+          Create Room!
+        </button>
+      </form>
     </div>
   </MainLayout>
 </template>

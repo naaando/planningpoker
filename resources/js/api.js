@@ -1,14 +1,29 @@
 import axios from "axios";
 
-export const rounds = (roundId) => ({
-  create() {
-    return axios.post("/api/rounds");
+export function createRoom(name) {
+  return axios.post("/api/rooms", { name: name });
+}
+
+export function createRound(roomId) {
+  return axios.post("/api/rounds", {
+    room_id: roomId,
+  });
+}
+
+export const rooms = (roomSlug) => ({
+  get() {
+    return axios.get(`/api/rooms/${roomSlug}`);
   },
+});
+
+export const rounds = (roundId) => ({
   get() {
     return axios.get(`/api/rounds/${roundId}`);
   },
-  finish() {
-    return axios.post(`/api/rounds/${roundId}/finish`);
+  finish(shouldFinish = true) {
+    return axios.put(`/api/rounds/${roundId}`, {
+      finished: shouldFinish,
+    });
   },
 });
 
