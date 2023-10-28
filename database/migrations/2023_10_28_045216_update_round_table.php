@@ -11,7 +11,7 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('rounds', function (Blueprint $table) {
-            $table->foreignId('room_id')->nullable()->constrained('rooms')->cascadeOnDelete();
+            $table->foreignUlid('room_id')->constrained('rooms')->cascadeOnDelete();
         });
     }
 
