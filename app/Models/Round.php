@@ -11,6 +11,8 @@ class Round extends Model
     use HasFactory;
     use HasUlids;
 
+    protected $fillable = ['room_id'];
+
     protected $with = ['votes'];
 
     protected $appends = ['votes_average', 'votes_count'];

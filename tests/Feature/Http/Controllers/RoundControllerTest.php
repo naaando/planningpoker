@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\RoundUpdated;
+use App\Models\Room;
 use App\Models\Round;
 use App\Models\Vote;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,7 +18,11 @@ uses(RefreshDatabase::class);
 test('can create round', function () {
     assertDatabaseCount('rounds', 0);
 
-    postJson('/api/rounds')
+    $room = Room::factory()->create();
+
+    postJson('/api/rounds', [
+        'room_id' => $room->id,
+    ])
         ->assertCreated()
         ->assertJson(function (AssertableJson $json) {
             $json
@@ -30,7 +35,7 @@ test('can create round', function () {
 });
 
 test('can get round with votes', function () {
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
 
     getJson("/api/rounds/{$round->id}")
         ->assertJson(function (AssertableJson $json) use ($round) {
@@ -45,7 +50,7 @@ test('can get round with votes', function () {
 });
 
 test('average is zero on empty votes', function () {
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
 
     getJson("/api/rounds/{$round->id}")
         ->assertJson(function (AssertableJson $json) {
@@ -57,7 +62,7 @@ test('average is zero on empty votes', function () {
 });
 
 test('average is zero on nulled votes', function () {
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
     Vote::factory()->for($round)->create(['vote' => null]);
 
     getJson("/api/rounds/{$round->id}")
@@ -70,7 +75,7 @@ test('average is zero on nulled votes', function () {
 });
 
 test('average is correctly calculated', function () {
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
     Vote::factory()->for($round)->createMany([
         ['vote' => null],
         ['vote' => 1],
@@ -95,7 +100,7 @@ test('average is correctly calculated', function () {
 });
 
 test('count votes works', function () {
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
     Vote::factory()->for($round)->createMany([
         ['vote' => null],
         ['vote' => 1],
@@ -121,7 +126,7 @@ test('count votes works', function () {
 
 // a bit redundant but validates logic
 test('count vote ignores null voters', function () {
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
     Vote::factory()->for($round)->createMany([
         ['vote' => null],
         ['vote' => null],
@@ -140,7 +145,7 @@ test('count vote ignores null voters', function () {
 
 test('can finish round', function () {
     Event::fake();
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
 
     putJson("/api/rounds/{$round->id}", [
         'finished' => true,
