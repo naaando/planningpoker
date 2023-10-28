@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\RoundUpdated;
 use App\Http\Resources\RoundResource;
+use App\Models\Room;
 use App\Models\Round;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
@@ -15,11 +16,17 @@ class RoundController extends Controller
      */
     public function store(Request $request)
     {
-        return new RoundResource(
-            Round::create(
-                $request->all()
-            )
-        );
+        $request->validate([
+            'room_id' => ['required', 'exists:rooms,id'],
+        ]);
+
+        $room = Room::find($request->input('room_id'));
+
+        abort_if($room->round, 422, 'Room already has a active round');
+
+        $round = $room->rounds()->create($request->all());
+
+        return new RoundResource($round);
     }
 
     /**

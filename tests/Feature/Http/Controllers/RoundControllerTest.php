@@ -184,3 +184,21 @@ test('finish can be false', function () {
 
     Event::assertDispatched(RoundUpdated::class);
 });
+
+test('cannot create round on room with active round', function () {
+    $room = Room::factory()->create();
+    $round = Round::factory()->for($room)->create();
+
+    postJson('/api/rounds', [
+        'room_id' => $room->id,
+    ])->assertStatus(422);
+
+    $round->unguard();
+    $round->update([
+        'finished_at' => now(),
+    ]);
+
+    postJson('/api/rounds', [
+        'room_id' => $room->id,
+    ])->assertCreated();
+});
