@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Room;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,8 +25,9 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/{round}', function ($round) {
-    return Inertia::render('Round', [
-        'roundId' => $round,
+Route::get('/{room:slug}', function (Room $room) {
+    return Inertia::render('Room', [
+        'roomSlug' => $room->slug,
+        'roomName' => $room->name,
     ]);
 });
