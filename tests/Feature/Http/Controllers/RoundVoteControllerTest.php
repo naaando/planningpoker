@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\RoundUpdated;
+use App\Models\Room;
 use App\Models\Round;
 use App\Models\Vote;
 
@@ -17,7 +18,7 @@ uses(RefreshDatabase::class);
 
 test('can join round with null vote', function () {
     Event::fake();
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
 
     postJson("api/rounds/{$round->id}/votes", [
         'name' => fake()->name,
@@ -32,7 +33,7 @@ test('can join round with null vote', function () {
 
 test('can vote on round', function () {
     Event::fake();
-    $round = Round::factory()->create();
+    $round = Round::factory()->for(Room::factory())->create();
 
     $emtpyVoteResponse = postJson("api/rounds/{$round->id}/votes", [
         'name' => fake()->name,
