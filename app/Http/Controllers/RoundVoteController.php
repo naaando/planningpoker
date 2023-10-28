@@ -56,7 +56,7 @@ class RoundVoteController extends Controller
      */
     public function destroy(Round $round, Vote $vote)
     {
-        $removed = Vote::where('round_id', $round->id)->destroy($vote->id);
+        $removed = Vote::where('round_id', $round->id)->delete($vote->id);
 
         if (!$removed) {
             abort(404);

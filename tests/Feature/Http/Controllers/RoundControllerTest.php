@@ -163,3 +163,24 @@ test('can finish round', function () {
 
     Event::assertDispatched(RoundUpdated::class);
 });
+
+test('finish can be false', function () {
+    Event::fake();
+    $round = Round::factory()->for(Room::factory())->create();
+
+    putJson("/api/rounds/{$round->id}", [
+        'finished' => false,
+    ])
+        ->assertOk()
+        ->assertJson(function (AssertableJson $json) use ($round) {
+            $json
+                ->where('data.id', $round->id)
+                ->has('data.created_at')
+                ->has('data.updated_at')
+                ->has('data.finished_at')
+                ->where('data.finished_at', null)
+            ;
+        });
+
+    Event::assertDispatched(RoundUpdated::class);
+});
