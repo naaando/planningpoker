@@ -31,8 +31,10 @@ test('can create a room', function () {
     $response->assertCreated();
 
     $response->assertJson([
-        'name' => $name,
-        'slug' => Str::slug($name),
+        'data' => [
+            'name' => $name,
+            'slug' => Str::slug($name),
+        ],
     ]);
 
     assertDatabaseHas('rooms', [
@@ -46,14 +48,16 @@ test('can fetch current round on controller', function () {
     $round = $room->rounds()->create();
 
     getJson("/api/rooms/{$room->slug}")->assertOk()->assertJson([
-        'name' => $room->name,
-        'slug' => $room->slug,
-        'round' => [
-            'id' => $round->id,
-            'created_at' => $round->created_at->toISOString(),
-            'updated_at' => $round->updated_at->toISOString(),
-            'finished_at' => null,
-            'votes' => [],
+        'data' => [
+            'name' => $room->name,
+            'slug' => $room->slug,
+            'round' => [
+                'id' => $round->id,
+                'created_at' => $round->created_at->toISOString(),
+                'updated_at' => $round->updated_at->toISOString(),
+                'finished_at' => null,
+                'votes' => [],
+            ],
         ],
     ]);
 });
@@ -66,8 +70,10 @@ test('can update name and slug', function () {
     putJson("/api/rooms/{$room->slug}", [
         'name' => $name,
     ])->assertOk()->assertJson([
-        'name' => $name,
-        'slug' => Str::slug($name),
+        'data' => [
+            'name' => $name,
+            'slug' => Str::slug($name),
+        ]
     ]);
 
     assertDatabaseHas('rooms', [

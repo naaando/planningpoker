@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\RoomResource;
 use App\Models\Room;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,7 @@ class RoomController extends Controller
             'name' => $request->name,
         ]);
 
-        return response()->json($room, 201);
+        return new RoomResource($room);
     }
 
     /**
@@ -28,7 +29,7 @@ class RoomController extends Controller
      */
     public function show(Room $room)
     {
-        return response()->json($room);
+        return new RoomResource($room);
     }
 
     /**
@@ -44,6 +45,6 @@ class RoomController extends Controller
             'name' => $request->name,
         ]);
 
-        return response()->json($room);
+        return new RoomResource($room);
     }
 }
