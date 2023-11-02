@@ -35,7 +35,7 @@ class Room extends Model
      */
     public function round()
     {
-        return $this->hasOne(Round::class)->whereNull('finished_at');
+        return $this->hasOne(Round::class)->latest();
     }
 
     /**
