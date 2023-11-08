@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+    planningpoker:
+        image: planningpoker:latest
+        build:
+            context: ../
+            dockerfile: deploy/Dockerfile
+        env_file:
+            - .env
+        ports:
+            - "${APP_PORT:-80}:80"
+        depends_on:
+            - db
+
+    db:
+        image: postgres:13
+        environment:
+            POSTGRES_USER: ${DB_USERNAME:-postgres}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+            POSTGRES_DB: ${DB_DATABASE:-planningpoker}
+        volumes:
+            - planningpoker-postgres:/var/lib/postgresql/data
+
+volumes:
+    planningpoker-postgres:
+        driver: local
