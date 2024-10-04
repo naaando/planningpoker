@@ -5,7 +5,7 @@ import BaseTable from "@/Components/VotePresentation/BaseTable.vue";
 import HorizontalTable from "@/Components/VotePresentation/HorizontalTable.vue";
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { Head } from "@inertiajs/vue3";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { createRound, rooms, rounds } from "../api";
 
 const props = defineProps({
@@ -72,6 +72,24 @@ onMounted(async () => {
       finished.value = e.round.finished_at !== null;
     });
 });
+
+const groupedVotes = computed(() => {
+  const groups = votes
+    .value
+    .reduce((grouped, vote) => {
+        if (typeof vote.vote === 'number' && !isNaN(vote.vote)) {
+            grouped[vote.vote] = (grouped[vote.vote] ?? 0) + 1
+        }
+
+        return grouped;
+    }, {});
+
+    const x = Object
+        .entries(groups);
+
+    x.sort((a, b) => a[1] - b[1]);
+    return x;
+})
 </script>
 
 <template>
@@ -121,23 +139,23 @@ onMounted(async () => {
       :username="username"
     ></Deck>
 
-    <div v-if="finished" class="p-2 space-x-4 mb-4 text-white items-center justify-center fixed bottom-0 left-0 w-full flex">
+    <div v-if="finished" class="p-2 space-x-4 mb-8 text-white items-center justify-center fixed bottom-0 left-0 w-full flex">
         <div class="text-center">
-            Count
+            Total
             <span class="font-bold block">{{ count }} votes</span>
         </div>
 
-        <div>
-            Average
-            <div class="h-24 w-16">
-                <Card
-                :number="average"
-                owner=""
+        <div v-for="[vote, votes] in groupedVotes" :key="vote" class="h-28">
+            <Card
+                :number="vote"
+                :owner="`${votes} votes`"
                 :visible="true"
-                ></Card>
+            ></Card>
+
+            <div class="text-center font-bold">
+                ({{ (votes / count * 100).toFixed(0) }}%)
             </div>
         </div>
-
     </div>
   </MainLayout>
 </template>
