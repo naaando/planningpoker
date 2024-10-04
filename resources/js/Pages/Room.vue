@@ -1,4 +1,5 @@
 <script setup>
+import Card from "@/Components/Card.vue";
 import Deck from "@/Components/Deck.vue";
 import BaseTable from "@/Components/VotePresentation/BaseTable.vue";
 import HorizontalTable from "@/Components/VotePresentation/HorizontalTable.vue";
@@ -77,6 +78,13 @@ onMounted(async () => {
   <Head :title="'Room ' + roomName" />
 
   <MainLayout v-slot="{ username }">
+    <div
+        v-if="!finished"
+        class="p-2 mb-4 space-x-4 text-gray-950 bg-yellow-500 justify-around font-bold text-center"
+    >
+        Left to vote {{ votes.length - count }}
+    </div>
+
     <BaseTable
       v-slot="{ directionalVotes }"
       :votes="votes"
@@ -108,9 +116,28 @@ onMounted(async () => {
     </BaseTable>
 
     <Deck
-      v-if="username && roundId"
+      v-if="username && roundId && !finished"
       :round="roundId"
       :username="username"
     ></Deck>
+
+    <div v-if="finished" class="p-2 space-x-4 mb-4 text-white items-center justify-center fixed bottom-0 left-0 w-full flex">
+        <div class="text-center">
+            Count
+            <span class="font-bold block">{{ count }} votes</span>
+        </div>
+
+        <div>
+            Average
+            <div class="h-24 w-16">
+                <Card
+                :number="average"
+                owner=""
+                :visible="true"
+                ></Card>
+            </div>
+        </div>
+
+    </div>
   </MainLayout>
 </template>
