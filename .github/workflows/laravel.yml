@@ -1,4 +1,4 @@
-name: Laravel
+name: CI Laravel - Testes
 
 on:
   push:
