@@ -28,7 +28,7 @@ const setUsername = () => {
 
 <template>
   <div
-    class="flex flex-col items-center px-4 py-2 space-x-2 sm:flex-row dark:text-white"
+    class="flex flex-col items-center px-4 py-2 space-x-2 sm:flex-row dark:text-white bg-blue-700"
   >
     <h1 class="my-2 text-xl font-bold text-center sm:mr-auto">
       Planning Poker
