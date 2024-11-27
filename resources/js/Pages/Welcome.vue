@@ -1,6 +1,6 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
-import { createRound, createRoom } from "@/api";
+import { createRoom, createRound } from "@/api";
 import { Head, router } from "@inertiajs/vue3";
 import { ref } from "vue";
 
@@ -22,9 +22,9 @@ async function start() {
   <Head title="New Room" />
 
   <MainLayout>
-    <div class="absolute top-0 flex items-center justify-center w-full h-full">
+    <div class="absolute top-0 flex items-center justify-center w-full h-full pointer-events-none">
       <form
-        class="bg-white rounded p-3"
+        class="bg-white rounded p-3 shadow-lg border pointer-events-auto"
         @submit.prevent="start()"
       >
         <input
