@@ -28,13 +28,13 @@ const setUsername = () => {
 
 <template>
   <div
-    class="flex flex-col items-center px-4 py-2 space-x-2 sm:flex-row text-gray-900 dark:text-white bg-blue-700"
+    class="flex flex-col sm:flex-row flex-wrap sm:flex-nowrap justify-center sm:justify-normal items-center px-4 py-2 space-x-2 text-gray-900 dark:text-white bg-blue-700"
   >
-    <h1 class="w-1/3 my-2 text-xl font-bold text-left">Planning Poker</h1>
+    <h1 class="w-2/3 md:w-1/3 text-center md:text-left my-2 text-xl font-bold ">Planning Poker</h1>
 
     <a
       href="https://github.com/naaando/planningpoker"
-      class="w-1/3 text-center flex items-center justify-center space-x-1 text-gray-900 dark:text-white font-semibold"
+      class="hidden md:w-1/3 md:text-center md:flex items-center justify-center space-x-1 text-gray-900 dark:text-white font-semibold"
       target="_blank"
     >
       <svg
@@ -51,8 +51,8 @@ const setUsername = () => {
       <span class="whitespace-nowrap">naaando/planningpoker</span>
     </a>
 
-    <label class="w-1/3 text-right">
-      <span class="mr-2 font-semibold">Seu nome</span>
+    <label class="w-full md:w-1/3 flex items-center justify-center md:justify-end">
+      <span class="mr-2 font-semibold whitespace-nowrap">Seu nome</span>
       <input
         type="text"
         v-model="finalName"
