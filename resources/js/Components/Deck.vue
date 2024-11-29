@@ -1,6 +1,6 @@
 <script setup>
 import { votes } from "@/api";
-import { onMounted, watch, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const props = defineProps({
   username: {
@@ -50,8 +50,8 @@ watch([() => props.name, selectedItem], () => {
       class="px-3 py-6 text-lg font-bold rounded-t w-14"
       v-on:click="selectedItem = item"
       :class="{
-        'bg-blue-500 text-white': selectedItem === item,
-        'bg-white text-black': selectedItem !== item,
+        'bg-blue-500 text-white shadow': selectedItem === item,
+        'bg-white text-black shadow': selectedItem !== item,
       }"
     >
       {{ item }}
