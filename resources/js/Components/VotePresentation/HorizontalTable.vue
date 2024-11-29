@@ -73,7 +73,7 @@ const props = defineProps({
           >
             <div class="p-5">
               <div
-                class="rounded-full w-full aspect-video bg-white drop-shadow-sm flex justify-center items-center"
+                class="rounded-full w-full aspect-video bg-white drop-shadow-lg flex justify-center items-center"
               >
                 <div
                   class="text-center"

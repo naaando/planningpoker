@@ -139,7 +139,7 @@ const groupedVotes = computed(() => {
       :username="username"
     ></Deck>
 
-    <div v-if="finished" class="p-2 space-x-4 mb-8 text-white items-center justify-center fixed bottom-0 left-0 w-full flex">
+    <div v-if="finished" class="p-2 space-x-4 mb-8 text-gray-900 dark:text-white items-center justify-center fixed bottom-0 left-0 w-full flex">
         <div class="text-center">
             Total
             <span class="font-bold block">{{ count }} votes</span>
@@ -152,7 +152,7 @@ const groupedVotes = computed(() => {
                 :visible="true"
             ></Card>
 
-            <div class="text-center font-bold">
+            <div class="text-center font-bold mt-1">
                 ({{ (votes / count * 100).toFixed(0) }}%)
             </div>
         </div>
