@@ -25,7 +25,7 @@ defineProps({
 
     <div
       v-if="visible && number"
-      class="flex flex-col justify-center h-full px-1 text-lg font-bold text-black bg-white rounded"
+      class="flex flex-col justify-center h-full px-1 text-lg font-bold text-black bg-white rounded shadow"
     >
       <div>{{ number }}</div>
 
@@ -40,12 +40,12 @@ defineProps({
 
     <div
       v-if="!visible && number"
-      class="h-full px-1 text-lg font-bold text-black bg-blue-500 rounded"
+      class="h-full px-1 text-lg font-bold text-black bg-blue-500 rounded shadow"
     ></div>
 
     <div
       v-if="!number"
-      class="h-full px-1 text-lg font-bold text-black bg-gray-500 rounded"
+      class="h-full px-1 text-lg font-bold text-black bg-gray-500 rounded shadow"
     ></div>
   </div>
 </template>
