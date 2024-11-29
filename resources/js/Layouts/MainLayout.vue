@@ -1,12 +1,13 @@
 <script setup>
 import Nav from "@/Components/Nav.vue";
 import ProfileModal from "@/Components/ProfileModal.vue";
-import { ref, onMounted } from "vue";
+import user from "@/user";
+import { onMounted, ref } from "vue";
 
 const username = ref("");
 
 const fetchUsername = () => {
-  username.value = sessionStorage.getItem("username") ?? "";
+  username.value = user.retrieveUsername() ?? "";
   console.log(`Name on session storage: ${username.value}`);
 };
 

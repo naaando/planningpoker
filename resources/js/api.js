@@ -1,4 +1,5 @@
 import axios from "axios";
+import user from "./user";
 
 export function createRoom(name) {
   return axios.post("/api/rooms", { name: name });
@@ -45,7 +46,7 @@ export const votes = (roundId) => ({
     }
 
     const response = await axios.post(`/api/rounds/${roundId}/votes`, {
-      name: this.retrieveUsername(),
+      name: user.retrieveUsername(),
     });
 
     this.saveId(response.data.data.id);
@@ -54,7 +55,7 @@ export const votes = (roundId) => ({
   set(value) {
     const id = this.retrieveId();
     axios.put(`/api/rounds/${roundId}/votes/${id}`, {
-      name: this.retrieveUsername(),
+      name: user.retrieveUsername(),
       vote: value,
     });
   },
@@ -63,8 +64,5 @@ export const votes = (roundId) => ({
   },
   saveId(id) {
     sessionStorage.setItem(`vote.${roundId}`, id);
-  },
-  retrieveUsername() {
-    return sessionStorage.getItem(`username`);
   },
 });

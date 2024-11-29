@@ -1,4 +1,5 @@
 <script setup>
+import user from "@/user";
 import { ref, watch } from "vue";
 
 const props = defineProps({
@@ -21,7 +22,7 @@ const emit = defineEmits(["name-updated"]);
 
 const setUsername = () => {
   console.log(`Setting name: ${finalName.value}`);
-  sessionStorage.setItem("username", finalName.value);
+  user.saveUsername(finalName.value)
   emit("name-updated");
 };
 </script>
