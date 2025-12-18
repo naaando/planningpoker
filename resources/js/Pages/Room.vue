@@ -61,17 +61,7 @@ onMounted(async () => {
       average.value = e.round.votes_average;
       finished.value = e.round.finished_at !== null;
     })
-    .listen("RoundUpdated", (e) => {
-      if (e.round.id !== roundId.value) {
-        return;
-      }
-
-      votes.value = e.round.votes;
-      count.value = e.round.votes_count;
-      average.value = e.round.votes_average;
-      finished.value = e.round.finished_at !== null;
-    })
-    .listen("RoundRevealed", (e) => {
+    .listen("RoundVoteUpdated", (e) => {
       if (e.round.id !== roundId.value) {
         return;
       }
@@ -84,22 +74,19 @@ onMounted(async () => {
 });
 
 const groupedVotes = computed(() => {
-  const groups = votes
-    .value
-    .reduce((grouped, vote) => {
-        if (typeof vote.vote === 'number' && !isNaN(vote.vote)) {
-            grouped[vote.vote] = (grouped[vote.vote] ?? 0) + 1
-        }
+  const groups = votes.value.reduce((grouped, vote) => {
+    if (typeof vote.vote === "number" && !isNaN(vote.vote)) {
+      grouped[vote.vote] = (grouped[vote.vote] ?? 0) + 1;
+    }
 
-        return grouped;
-    }, {});
+    return grouped;
+  }, {});
 
-    const x = Object
-        .entries(groups);
+  const x = Object.entries(groups);
 
-    x.sort((a, b) => a[1] - b[1]);
-    return x;
-})
+  x.sort((a, b) => a[1] - b[1]);
+  return x;
+});
 </script>
 
 <template>
@@ -107,10 +94,10 @@ const groupedVotes = computed(() => {
 
   <MainLayout v-slot="{ username }">
     <div
-        v-if="!finished"
-        class="p-2 mb-4 space-x-4 text-gray-950 bg-yellow-500 justify-around font-bold text-center"
+      v-if="!finished"
+      class="p-2 mb-4 space-x-4 text-gray-950 bg-yellow-500 justify-around font-bold text-center"
     >
-        Left to vote {{ votes.length - count }}
+      Left to vote {{ votes.length - count }}
     </div>
 
     <BaseTable
@@ -149,23 +136,30 @@ const groupedVotes = computed(() => {
       :username="username"
     ></Deck>
 
-    <div v-if="finished" class="p-2 space-x-4 mb-8 text-gray-900 dark:text-white items-center justify-center fixed bottom-0 left-0 w-full flex">
-        <div class="text-center">
-            Total
-            <span class="font-bold block">{{ count }} votes</span>
-        </div>
+    <div
+      v-if="finished"
+      class="p-2 space-x-4 mb-8 text-gray-900 dark:text-white items-center justify-center fixed bottom-0 left-0 w-full flex"
+    >
+      <div class="text-center">
+        Total
+        <span class="font-bold block">{{ count }} votes</span>
+      </div>
 
-        <div v-for="[vote, votes] in groupedVotes" :key="vote" class="h-28">
-            <Card
-                :number="vote"
-                :owner="`${votes} votes`"
-                :visible="true"
-            ></Card>
+      <div
+        v-for="[vote, votes] in groupedVotes"
+        :key="vote"
+        class="h-28"
+      >
+        <Card
+          :number="vote"
+          :owner="`${votes} votes`"
+          :visible="true"
+        ></Card>
 
-            <div class="text-center font-bold mt-1">
-                ({{ (votes / count * 100).toFixed(0) }}%)
-            </div>
+        <div class="text-center font-bold mt-1">
+          ({{ ((votes / count) * 100).toFixed(0) }}%)
         </div>
+      </div>
     </div>
   </MainLayout>
 </template>

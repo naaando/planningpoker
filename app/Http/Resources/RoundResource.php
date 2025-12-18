@@ -30,9 +30,9 @@ class RoundResource extends JsonResource
             'id' => $this->id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'finished_at' => $this->finished_at,
+            'finished_at' => null,
             'votes_count' => $this->votes_count,
-            'votes_average' => $this->votes_average,
+            'votes_average' => null,
             'votes' => VoteResource::collection($this->votes),
         ];
     }
