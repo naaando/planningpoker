@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\RoundUpdated;
+use App\Events\RoundVoteUpdated;
 use App\Http\Resources\VoteResource;
 use App\Models\Round;
 use App\Models\Vote;
@@ -26,7 +26,7 @@ class RoundVoteController extends Controller
     {
         $vote = $round->votes()->create($request->all());
 
-        Event::dispatch(new RoundUpdated($round));
+        Event::dispatch(new RoundVoteUpdated($round));
 
         return new VoteResource($vote);
     }
@@ -46,7 +46,7 @@ class RoundVoteController extends Controller
     {
         $vote->update($request->all());
 
-        Event::dispatch(new RoundUpdated($round));
+        Event::dispatch(new RoundVoteUpdated($round));
 
         return new VoteResource($vote);
     }
@@ -62,7 +62,7 @@ class RoundVoteController extends Controller
             abort(404);
         }
 
-        Event::dispatch(new RoundUpdated($round));
+        Event::dispatch(new RoundVoteUpdated($round));
 
         return response()->noContent();
     }

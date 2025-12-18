@@ -70,6 +70,16 @@ onMounted(async () => {
       count.value = e.round.votes_count;
       average.value = e.round.votes_average;
       finished.value = e.round.finished_at !== null;
+    })
+    .listen("RoundRevealed", (e) => {
+      if (e.round.id !== roundId.value) {
+        return;
+      }
+
+      votes.value = e.round.votes;
+      count.value = e.round.votes_count;
+      average.value = e.round.votes_average;
+      finished.value = e.round.finished_at !== null;
     });
 });
 

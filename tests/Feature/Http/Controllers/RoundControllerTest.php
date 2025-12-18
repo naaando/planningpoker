@@ -1,7 +1,7 @@
 <?php
 
 use App\Events\RoundCreated;
-use App\Events\RoundUpdated;
+use App\Events\RoundVoteUpdated;
 use App\Models\Room;
 use App\Models\Round;
 use App\Models\Vote;
@@ -163,7 +163,7 @@ test('can finish round', function () {
             ;
         });
 
-    Event::assertDispatched(RoundUpdated::class);
+    Event::assertDispatched(RoundVoteUpdated::class);
 });
 
 test('finish can be false', function () {
@@ -184,7 +184,7 @@ test('finish can be false', function () {
             ;
         });
 
-    Event::assertDispatched(RoundUpdated::class);
+    Event::assertDispatched(RoundVoteUpdated::class);
 });
 
 test('cannot create round on room with active round', function () {

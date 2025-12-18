@@ -9,7 +9,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class RoundUpdated implements ShouldBroadcast
+class RoundRevealed implements ShouldBroadcast
 {
     use Dispatchable;
     use InteractsWithSockets;

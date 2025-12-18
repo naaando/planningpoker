@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\RoundCreated;
-use App\Events\RoundUpdated;
+use App\Events\RoundRevealed;
 use App\Http\Resources\RoundResource;
 use App\Models\Room;
 use App\Models\Round;
@@ -60,7 +60,7 @@ class RoundController extends Controller
 
         $round->save();
 
-        Event::dispatch(new RoundUpdated($round));
+        Event::dispatch(new RoundRevealed($round));
 
         return new RoundResource($round);
     }

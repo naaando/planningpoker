@@ -14,6 +14,16 @@ class VoteResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        $vote = null;
+
+        if ($this->round->isFinished) {
+            $vote = $this->vote;
+        }
+
+        return [
+            'id' => $this->when($this->id, $this->id),
+            'name' => $this->name,
+            'vote' => $vote,
+        ];
     }
 }

@@ -14,6 +14,21 @@ class RoundResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        if ($this->isFinished) {
+            return [
+                'id' => $this->id,
+                'finished_at' => $this->finished_at,
+                'votes' => VoteResource::collection($this->votes),
+                'votes_average' => $this->votes_average,
+                'votes_count' => $this->votes_count
+            ];
+        }
+
+        return [
+            'id' => $this->id,
+            'finished_at' => $this->finished_at,
+            'votes_count' => $this->votes_count,
+            'votes' => VoteResource::collection($this->votes),
+        ];
     }
 }

@@ -1,10 +1,9 @@
 <?php
 
-use App\Events\RoundUpdated;
+use App\Events\RoundVoteUpdated;
 use App\Models\Room;
 use App\Models\Round;
 use App\Models\Vote;
-
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 
@@ -39,7 +38,7 @@ test('can join round with null vote', function () {
     $myVote = $round->votes()->first();
 
     expect($myVote->vote)->toBe(null);
-    Event::assertDispatched(RoundUpdated::class);
+    Event::assertDispatched(RoundVoteUpdated::class);
 });
 
 test('show vote on round', function () {
@@ -78,7 +77,7 @@ test('can vote on round', function () {
     $myVote = $round->votes()->first();
 
     expect($myVote->vote)->toBe(5);
-    Event::assertDispatched(RoundUpdated::class);
+    Event::assertDispatched(RoundVoteUpdated::class);
 });
 
 test('can delete vote on round', function () {
@@ -93,7 +92,7 @@ test('can delete vote on round', function () {
 
     assertDatabaseCount('votes', 0);
 
-    Event::assertDispatched(RoundUpdated::class);
+    Event::assertDispatched(RoundVoteUpdated::class);
 });
 
 test('cannot delete vote not found', function () {
@@ -104,5 +103,5 @@ test('cannot delete vote not found', function () {
 
     deleteJson("api/rounds/{$round->id}/votes/{$fakeId}")->assertNotFound();
 
-    Event::assertNotDispatched(RoundUpdated::class);
+    Event::assertNotDispatched(RoundVoteUpdated::class);
 });

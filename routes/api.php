@@ -17,5 +17,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('rounds', RoundController::class);
-Route::apiResource('rounds.votes', RoundVoteController::class);
+Route::apiResource('rounds.votes', RoundVoteController::class)->names('rounds.votes');
 Route::apiResource('rooms', RoomController::class)->only(['store', 'show', 'update']);
