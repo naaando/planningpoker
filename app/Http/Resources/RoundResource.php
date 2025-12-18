@@ -17,6 +17,8 @@ class RoundResource extends JsonResource
         if ($this->isFinished) {
             return [
                 'id' => $this->id,
+                'created_at' => $this->created_at,
+                'updated_at' => $this->updated_at,
                 'finished_at' => $this->finished_at,
                 'votes' => VoteResource::collection($this->votes),
                 'votes_average' => $this->votes_average,
@@ -26,8 +28,11 @@ class RoundResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             'finished_at' => $this->finished_at,
             'votes_count' => $this->votes_count,
+            'votes_average' => $this->votes_average,
             'votes' => VoteResource::collection($this->votes),
         ];
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\RoundCreated;
 use App\Events\RoundRevealed;
+use App\Events\RoundVoteUpdated;
 use App\Http\Resources\RoundResource;
 use App\Models\Room;
 use App\Models\Round;
@@ -60,7 +61,7 @@ class RoundController extends Controller
 
         $round->save();
 
-        Event::dispatch(new RoundRevealed($round));
+        Event::dispatch(new RoundVoteUpdated($round));
 
         return new RoundResource($round);
     }

@@ -42,7 +42,7 @@ test('can join round with null vote', function () {
 });
 
 test('show vote on round', function () {
-    $round = Round::factory()->for(Room::factory())->create();
+    $round = Round::factory()->for(Room::factory())->create(['finished_at' => now()]);
     $vote = Vote::factory()->for($round)->create();
 
     getJson("api/rounds/{$round->id}/votes/{$vote->id}")
